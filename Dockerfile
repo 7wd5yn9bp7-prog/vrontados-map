@@ -1,12 +1,20 @@
 FROM nginx:alpine
 
+# Install gettext for envsubst
+RUN apk add --no-cache gettext
+
 # Copy the static files to nginx html directory
 COPY index.html /usr/share/nginx/html/
 
 # Copy custom nginx config for Cloud Run (uses PORT env variable)
 COPY nginx.conf /etc/nginx/nginx.conf
 
+# Copy entrypoint script
+COPY docker-entrypoint.sh /
+RUN chmod +x /docker-entrypoint.sh
+
 # Expose port 8080 (Cloud Run default)
 EXPOSE 8080
 
+ENTRYPOINT ["/docker-entrypoint.sh"]
 CMD ["nginx", "-g", "daemon off;"]
