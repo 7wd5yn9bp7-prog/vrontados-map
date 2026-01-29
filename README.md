@@ -1,17 +1,64 @@
-# Αξιοθέατα Βροντάδου - Interactive Map
+# 🏛️ Αξιοθέατα Βροντάδου - Interactive Map
 
-An interactive map showcasing the historical and cultural attractions of Vrontados, Chios, Greece.
+An elegant, interactive map showcasing the historical and cultural attractions of Vrontados, Chios, Greece.
 
-## 🗺️ Features
+## 🗺️ Overview
 
-- Interactive Google Maps with 7 marked attractions
-- Dark-themed modern UI with glassmorphism design
-- Responsive layout for mobile and desktop
-- Click-to-explore attraction cards
+This project is a web-based interactive map designed to help visitors explore the beautiful landmarks of Vrontados. Built with modern web technologies and the Google Maps API, it offers a seamless and informative experience.
 
-## 🚀 Deploy to Google Cloud Run
+## ✨ Features
 
-### Option 1: Deploy from Source
+- **Interactive Map:** Powered by Google Maps API with custom dark-themed styling.
+- **7 Selected Attractions:** Curated list of historical and cultural sites with detailed descriptions.
+- **Modern UI:** Responsive design featuring glassmorphism and smooth animations.
+- **Mobile-Friendly:** Optimized for both desktop and mobile devices.
+- **Dockerized:** Ready for easy deployment using Nginx and Docker.
+
+## 🛠️ Tech Stack
+
+- **Frontend:** HTML5, CSS3 (Inter font, Glassmorphism), JavaScript (ES6+).
+- **Map Service:** Google Maps JavaScript API.
+- **Web Server:** Nginx (Alpine-based).
+- **Containerization:** Docker.
+
+## 📍 Featured Attractions
+
+1. **Μονή Μυρσινιδίου** - A historic monastery with panoramic Aegean views.
+2. **Όρμος Λω** - A traditional bay with modern nautical facilities.
+3. **Μνημείο Ψυχάρη** - Monument dedicated to the linguist Giannis Psycharis.
+4. **Δασκαλόπετρα (Πέτρα του Ομήρου)** - The legendary teaching site of Homer.
+5. **Μύλοι (Τάμπακικα)** - Iconic windmills of the Vrontados coastline.
+6. **Αφανής Ναύτης** - A tribute to the town's rich maritime heritage.
+7. **Βιβλιοθήκη "Άγιος Αγαπητός"** - A cultural and spiritual center.
+
+## 🚀 Getting Started
+
+### Local Development
+
+#### Using Python (Quick Start)
+```bash
+python3 -m http.server 8080
+```
+Then open `http://localhost:8080` in your browser.
+
+#### Using Docker
+1. Build the image:
+   ```bash
+   docker build -t vrontados-map .
+   ```
+2. Run the container:
+   ```bash
+   docker run -p 8080:8080 vrontados-map
+   ```
+Access the application at `http://localhost:8080`.
+
+## ☁️ Deployment
+
+### Google Cloud Run
+
+This project is configured for easy deployment to Google Cloud Run.
+
+#### Option 1: Command Line
 ```bash
 gcloud run deploy vrontados-map \
   --source . \
@@ -19,26 +66,16 @@ gcloud run deploy vrontados-map \
   --allow-unauthenticated
 ```
 
-### Option 2: Connect GitHub Repo
-1. Go to [Cloud Run Console](https://console.cloud.google.com/run)
-2. Click "Create Service"
-3. Select "Continuously deploy from a repository"
-4. Connect your GitHub repo
-5. Select this repository and branch
+#### Option 2: Continuous Deployment
+Connect your GitHub repository to Cloud Run for automated builds and deployments on every push.
 
-## 📍 Attractions
+## 📁 Project Structure
 
-1. Μονή Μυρσινιδίου
-2. Όρμος Λω
-3. Τάφος Γιάννη Ψυχάρη
-4. Δασκαλόπετρα (Πέτρα του Ομήρου)
-5. Μύλοι (Τάμπακικα)
-6. Αφανής Ναύτης
-7. Βιβλιοθήκη "Άγιος Αγαπητός"
+- `index.html`: Main application file (HTML/CSS/JS).
+- `nginx.conf`: Nginx configuration for serving the app and handling compression.
+- `Dockerfile`: Instructions for building the Docker image.
+- `README.md`: Documentation (you are here).
 
-## 🛠️ Local Development
+## 📝 License
 
-```bash
-python3 -m http.server 8080
-# Open http://localhost:8080
-```
+This project is open-source. Feel free to use and modify it for your needs.
