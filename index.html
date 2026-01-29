@@ -130,6 +130,12 @@
             opacity: 1;
         }
 
+        .place-card:focus-visible {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.4);
+        }
+
         .place-card.active {
             border-color: var(--primary);
             background: rgba(26, 115, 232, 0.15);
@@ -513,13 +519,15 @@
                 const card = document.createElement('div');
                 card.className = 'place-card';
                 card.id = `place-${index}`;
+                card.setAttribute('tabindex', '0');
+                card.setAttribute('role', 'button');
                 card.innerHTML = `
                     <div class="place-number">${index + 1}</div>
                     <h3>${place.name}</h3>
                     <p>${place.description}</p>
                 `;
 
-                card.addEventListener('click', () => {
+                const handleClick = () => {
                     // Close all info windows
                     infoWindows.forEach(iw => iw.close());
 
@@ -538,6 +546,15 @@
 
                     // Set active card
                     setActiveCard(index);
+                };
+
+                card.addEventListener('click', handleClick);
+
+                card.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        handleClick();
+                    }
                 });
 
                 container.appendChild(card);
