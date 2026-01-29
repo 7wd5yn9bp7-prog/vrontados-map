@@ -508,6 +508,8 @@
 
         function renderPlaceCards() {
             const container = document.getElementById('placesList');
+            // Bolt optimization: Batch DOM insertion using DocumentFragment
+            const fragment = document.createDocumentFragment();
 
             places.forEach((place, index) => {
                 const card = document.createElement('div');
@@ -540,8 +542,10 @@
                     setActiveCard(index);
                 });
 
-                container.appendChild(card);
+                fragment.appendChild(card);
             });
+
+            container.appendChild(fragment);
         }
 
         function setActiveCard(index) {
