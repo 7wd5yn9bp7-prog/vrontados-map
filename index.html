@@ -126,6 +126,14 @@
             border-color: var(--primary);
         }
 
+        .place-card:focus-visible {
+            outline: 2px solid var(--primary);
+            outline-offset: 2px;
+            transform: translateY(-4px);
+            box-shadow: var(--shadow);
+            border-color: var(--primary);
+        }
+
         .place-card:hover::before {
             opacity: 1;
         }
@@ -615,6 +623,12 @@
                 const card = document.createElement('div');
                 card.className = 'place-card';
                 card.id = `place-${index}`;
+
+                // Accessibility attributes
+                card.tabIndex = 0;
+                card.setAttribute('role', 'button');
+                card.setAttribute('aria-label', `Προβολή στο χάρτη: ${place.name}`);
+
                 card.innerHTML = `
                     <div class="place-number">${index + 1}</div>
                     <h3>${place.name}</h3>
@@ -626,7 +640,7 @@
                     </div>
                 `;
 
-                card.addEventListener('click', () => {
+                const handleSelection = () => {
                     // Close all info windows
                     infoWindows.forEach(iw => iw.close());
 
@@ -645,6 +659,15 @@
 
                     // Set active card
                     setActiveCard(index);
+                };
+
+                card.addEventListener('click', handleSelection);
+
+                card.addEventListener('keydown', (event) => {
+                    if (event.key === 'Enter' || event.key === ' ') {
+                        event.preventDefault();
+                        handleSelection();
+                    }
                 });
 
                 container.appendChild(card);
