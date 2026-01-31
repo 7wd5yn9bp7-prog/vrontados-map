@@ -298,6 +298,126 @@
             margin-top: 16px;
         }
 
+        /* Gallery View */
+        .gallery-view {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--background);
+            z-index: 500;
+            padding: 100px 40px 40px 40px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+        }
+
+        .gallery-view-header {
+            width: 100%;
+        }
+
+        .gallery-view-header h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #fff 0%, #a8c0ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(min(350px, 100%), 1fr));
+            gap: 32px;
+            align-items: stretch;
+        }
+
+        .gallery-view.hidden {
+            display: none;
+        }
+
+        .gallery-card {
+            background: var(--card-bg);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--card-border);
+            border-radius: 24px;
+            padding: 32px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            height: 100%;
+        }
+
+        .gallery-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .gallery-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--primary);
+            box-shadow: var(--shadow);
+        }
+
+        .gallery-card:hover::before {
+            opacity: 1;
+        }
+
+        .gallery-card h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            line-height: 1.4;
+        }
+
+        .gallery-card p {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+            display: block;
+            -webkit-line-clamp: none;
+            overflow: visible;
+        }
+
+        .gallery-card .card-actions {
+            margin-top: 8px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .map-view-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            padding: 8px 14px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .map-view-btn:hover {
+            background: var(--secondary);
+            border-color: var(--secondary);
+            transform: scale(1.05);
+        }
+
         /* Street View Panorama Overrides */
         .gm-iv-address {
             display: none !important;
@@ -397,9 +517,21 @@
         <main class="map-container">
             <div id="map"></div>
 
+            <div id="galleryView" class="gallery-view hidden">
+                <div class="gallery-view-header">
+                    <h2>🏛️ Συλλογή Αξιοθεάτων</h2>
+                </div>
+                <div id="galleryGrid" class="gallery-grid">
+                    <!-- Gallery cards will be dynamically inserted here -->
+                </div>
+            </div>
+
             <div class="map-controls">
+                <button id="viewToggle" class="map-btn">
+                    <span>🖼️ Προβολή Συλλογής</span>
+                </button>
                 <button id="mapTypeToggle" class="map-btn">
-                    <span>🛰️ Satellite</span>
+                    <span>🛰️ Δορυφόρος</span>
                 </button>
             </div>
 
@@ -561,10 +693,26 @@
                 const isSatellite = map.getMapTypeId() === 'satellite';
                 if (isSatellite) {
                     map.setMapTypeId('roadmap');
-                    mapTypeToggle.innerHTML = '<span>🛰️ Satellite</span>';
+                    mapTypeToggle.innerHTML = '<span>🛰️ Δορυφόρος</span>';
                 } else {
                     map.setMapTypeId('satellite');
-                    mapTypeToggle.innerHTML = '<span>🗺️ Normal</span>';
+                    mapTypeToggle.innerHTML = '<span>🗺️ Χάρτης</span>';
+                }
+            });
+
+            // Gallery View Toggle Logic
+            const viewToggle = document.getElementById('viewToggle');
+            const galleryView = document.getElementById('galleryView');
+
+            viewToggle.addEventListener('click', () => {
+                const isGallery = !galleryView.classList.contains('hidden');
+                if (isGallery) {
+                    galleryView.classList.add('hidden');
+                    viewToggle.innerHTML = '<span>🖼️ Προβολή Συλλογής</span>';
+                } else {
+                    galleryView.classList.remove('hidden');
+                    viewToggle.innerHTML = '<span>🗺️ Επιστροφή στον Χάρτη</span>';
+                    renderGalleryCards();
                 }
             });
 
@@ -618,6 +766,52 @@
 
             // Hide loading overlay
             document.getElementById('loadingOverlay').classList.add('hidden');
+        }
+
+        function renderGalleryCards() {
+            const container = document.getElementById('galleryGrid');
+            if (container.children.length > 0) return; // Already rendered
+
+            places.forEach((place, index) => {
+                const card = document.createElement('div');
+                card.className = 'gallery-card';
+
+                card.innerHTML = `
+                    <h3>${place.name}</h3>
+                    <p>${place.description}</p>
+                    <div class="card-actions">
+                        <button class="map-view-btn" onclick="showOnMap(${index})">
+                            📍 Δείτε στον Χάρτη
+                        </button>
+                        <button class="street-view-btn" onclick="openStreetView(${place.lat}, ${place.lng})">
+                            🏙️ Street View
+                        </button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function showOnMap(index) {
+            const galleryView = document.getElementById('galleryView');
+            const viewToggle = document.getElementById('viewToggle');
+
+            // Hide gallery
+            galleryView.classList.add('hidden');
+            viewToggle.innerHTML = '<span>🖼️ Προβολή Συλλογής</span>';
+
+            // Focus on marker
+            infoWindows.forEach(iw => iw.close());
+            infoWindows[index].open(map, markers[index]);
+            map.panTo(markers[index].getPosition());
+            map.setZoom(16);
+
+            markers[index].setAnimation(google.maps.Animation.BOUNCE);
+            setTimeout(() => {
+                markers[index].setAnimation(null);
+            }, 750);
+
+            setActiveCard(index);
         }
 
         function renderPlaceCards() {
