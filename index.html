@@ -126,6 +126,13 @@
             border-color: var(--primary);
         }
 
+        .place-card:focus-visible {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.4);
+            transform: translateY(-4px);
+        }
+
         .place-card:hover::before {
             opacity: 1;
         }
@@ -615,6 +622,20 @@
                 const card = document.createElement('div');
                 card.className = 'place-card';
                 card.id = `place-${index}`;
+
+                // Accessibility
+                card.setAttribute('role', 'button');
+                card.setAttribute('tabindex', '0');
+                card.setAttribute('aria-label', `Προβολή ${place.name}`);
+
+                // Keyboard support
+                card.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        card.click();
+                    }
+                });
+
                 card.innerHTML = `
                     <div class="place-number">${index + 1}</div>
                     <h3>${place.name}</h3>
