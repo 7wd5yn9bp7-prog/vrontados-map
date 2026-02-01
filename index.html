@@ -15,6 +15,7 @@
     <link rel="dns-prefetch" href="https://maps.googleapis.com">
     <link rel="dns-prefetch" href="https://maps.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="config.js"></script>
     <style>
         :root {
             --primary: #1a73e8;
@@ -711,10 +712,19 @@
     </script>
 
     <!-- Google Maps API -->
-    <script async defer
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDp2IT1eDBenf32sx9wK9itoLgN6JjEHBw&callback=initMap"
-        onerror="handleMapError()">
-        </script>
+    <script>
+        if (window.CONFIG && window.CONFIG.GOOGLE_MAPS_API_KEY) {
+            const script = document.createElement('script');
+            script.src = `https://maps.googleapis.com/maps/api/js?key=${window.CONFIG.GOOGLE_MAPS_API_KEY}&callback=initMap`;
+            script.async = true;
+            script.defer = true;
+            script.onerror = handleMapError;
+            document.body.appendChild(script);
+        } else {
+            console.error('Google Maps API Key is missing');
+            handleMapError();
+        }
+    </script>
 </body>
 
 </html>
