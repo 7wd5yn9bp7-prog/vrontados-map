@@ -11,3 +11,7 @@ Only add entries for:
 Format: `## YYYY-MM-DD - [Title]
 **Learning:** [Insight]
 **Action:** [How to apply next time]`
+
+## 2026-02-02 - Batch DOM Insertions
+**Learning:** Even with small lists (7 items), appending elements one-by-one triggers multiple reflows. `DocumentFragment` batches these into a single reflow, which scales better if the list grows.
+**Action:** Always use `DocumentFragment` when creating multiple DOM elements in a loop.

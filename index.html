@@ -772,6 +772,8 @@
             const container = document.getElementById('galleryGrid');
             if (container.children.length > 0) return; // Already rendered
 
+            const fragment = document.createDocumentFragment();
+
             places.forEach((place, index) => {
                 const card = document.createElement('div');
                 card.className = 'gallery-card';
@@ -788,8 +790,10 @@
                         </button>
                     </div>
                 `;
-                container.appendChild(card);
+                fragment.appendChild(card);
             });
+
+            container.appendChild(fragment);
         }
 
         function showOnMap(index) {
@@ -816,6 +820,7 @@
 
         function renderPlaceCards() {
             const container = document.getElementById('placesList');
+            const fragment = document.createDocumentFragment();
 
             places.forEach((place, index) => {
                 const card = document.createElement('div');
@@ -867,8 +872,10 @@
                     setActiveCard(index);
                 });
 
-                container.appendChild(card);
+                fragment.appendChild(card);
             });
+
+            container.appendChild(fragment);
         }
 
         function openStreetView(lat, lng) {
