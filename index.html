@@ -737,7 +737,7 @@
                             <h3>${place.name}</h3>
                             <p>${place.description}</p>
                             <div class="card-actions">
-                                <button class="street-view-btn" onclick="openStreetView(${place.lat}, ${place.lng})">
+                                <button class="street-view-btn" aria-label="Street View για ${place.name}" onclick="openStreetView(${place.lat}, ${place.lng})">
                                     🏙️ Street View
                                 </button>
                             </div>
@@ -780,10 +780,10 @@
                     <h3>${place.name}</h3>
                     <p>${place.description}</p>
                     <div class="card-actions">
-                        <button class="map-view-btn" onclick="showOnMap(${index})">
+                        <button class="map-view-btn" aria-label="Δείτε ${place.name} στον Χάρτη" onclick="showOnMap(${index})">
                             📍 Δείτε στον Χάρτη
                         </button>
-                        <button class="street-view-btn" onclick="openStreetView(${place.lat}, ${place.lng})">
+                        <button class="street-view-btn" aria-label="Street View για ${place.name}" onclick="openStreetView(${place.lat}, ${place.lng})">
                             🏙️ Street View
                         </button>
                     </div>
@@ -840,7 +840,7 @@
                     <h3>${place.name}</h3>
                     <p>${place.description}</p>
                     <div class="card-actions">
-                        <button class="street-view-btn" onclick="event.stopPropagation(); openStreetView(${place.lat}, ${place.lng})">
+                        <button class="street-view-btn" aria-label="Street View για ${place.name}" onclick="event.stopPropagation(); openStreetView(${place.lat}, ${place.lng})">
                             🏙️ Street View
                         </button>
                     </div>
