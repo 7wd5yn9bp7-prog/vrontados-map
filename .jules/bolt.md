@@ -11,3 +11,7 @@ Only add entries for:
 Format: `## YYYY-MM-DD - [Title]
 **Learning:** [Insight]
 **Action:** [How to apply next time]`
+
+## 2024-05-22 - Manual DOM Manipulation Bottlenecks
+**Learning:** In vanilla JS projects without frameworks, check loop-based `appendChild` calls. They often cause layout thrashing.
+**Action:** Always refactor to use `DocumentFragment` for batch insertions.
