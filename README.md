@@ -35,20 +35,29 @@ This project is a web-based interactive map designed to help visitors explore th
 
 ### Local Development
 
-#### Using Python (Quick Start)
-```bash
-python3 -m http.server 8080
-```
-Then open `http://localhost:8080` in your browser.
+1. **Configure API Key:**
+   Copy `config.example.js` to `config.js` and add your Google Maps API Key:
+   ```bash
+   cp config.example.js config.js
+   # Edit config.js and replace "YOUR_API_KEY_HERE" with your actual key
+   ```
+
+2. **Run Server:**
+
+   #### Using Python (Quick Start)
+   ```bash
+   python3 -m http.server 8080
+   ```
+   Then open `http://localhost:8080` in your browser.
 
 #### Using Docker
 1. Build the image:
    ```bash
    docker build -t vrontados-map .
    ```
-2. Run the container:
+2. Run the container (provide API Key as env var):
    ```bash
-   docker run -p 8080:8080 vrontados-map
+   docker run -p 8080:8080 -e GOOGLE_MAPS_API_KEY=your_api_key_here vrontados-map
    ```
 Access the application at `http://localhost:8080`.
 
@@ -56,14 +65,15 @@ Access the application at `http://localhost:8080`.
 
 ### Google Cloud Run
 
-This project is configured for easy deployment to Google Cloud Run.
+This project is configured for easy deployment to Google Cloud Run. You must set the `GOOGLE_MAPS_API_KEY` environment variable in your deployment configuration.
 
 #### Option 1: Command Line
 ```bash
 gcloud run deploy vrontados-map \
   --source . \
   --region europe-west1 \
-  --allow-unauthenticated
+  --allow-unauthenticated \
+  --set-env-vars GOOGLE_MAPS_API_KEY=your_api_key_here
 ```
 
 #### Option 2: Continuous Deployment
@@ -72,6 +82,8 @@ Connect your GitHub repository to Cloud Run for automated builds and deployments
 ## 📁 Project Structure
 
 - `index.html`: Main application file (HTML/CSS/JS).
+- `config.example.js`: Template for configuration (API keys).
+- `docker-entrypoint.sh`: Startup script for Docker container.
 - `nginx.conf`: Nginx configuration for serving the app and handling compression.
 - `Dockerfile`: Instructions for building the Docker image.
 - `README.md`: Documentation (you are here).
