@@ -11,3 +11,7 @@ Only add entries for:
 Format: `## YYYY-MM-DD - [Title]
 **Learning:** [Insight]
 **Action:** [How to apply next time]`
+
+## 2024-05-23 - DocumentFragment Batching
+**Learning:** Vanilla JS `appendChild` in a loop causes N reflows. `DocumentFragment` reduces this to 1 reflow.
+**Action:** Always check loop-based DOM insertions for batching opportunities.
