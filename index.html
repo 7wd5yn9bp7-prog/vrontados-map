@@ -816,6 +816,8 @@
 
         function renderPlaceCards() {
             const container = document.getElementById('placesList');
+            // Performance: Use DocumentFragment to batch DOM insertions and minimize reflows
+            const fragment = document.createDocumentFragment();
 
             places.forEach((place, index) => {
                 const card = document.createElement('div');
@@ -867,8 +869,10 @@
                     setActiveCard(index);
                 });
 
-                container.appendChild(card);
+                fragment.appendChild(card);
             });
+
+            container.appendChild(fragment);
         }
 
         function openStreetView(lat, lng) {
