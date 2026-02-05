@@ -904,11 +904,25 @@
         }
     </script>
 
-    <!-- Google Maps API -->
-    <script async defer
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDp2IT1eDBenf32sx9wK9itoLgN6JjEHBw&callback=initMap"
-        onerror="handleMapError()">
-        </script>
+    <!-- Configuration -->
+    <script src="config.js"></script>
+
+    <!-- Google Maps API Loader -->
+    <script>
+        (function () {
+            if (window.GOOGLE_MAPS_API_KEY) {
+                var script = document.createElement('script');
+                script.src = `https://maps.googleapis.com/maps/api/js?key=${window.GOOGLE_MAPS_API_KEY}&callback=initMap`;
+                script.async = true;
+                script.defer = true;
+                script.onerror = handleMapError;
+                document.head.appendChild(script);
+            } else {
+                console.error('Google Maps API Key is missing. Please create config.js with window.GOOGLE_MAPS_API_KEY set.');
+                handleMapError();
+            }
+        })();
+    </script>
 </body>
 
 </html>
