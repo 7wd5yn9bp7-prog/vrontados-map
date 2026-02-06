@@ -904,11 +904,34 @@
         }
     </script>
 
-    <!-- Google Maps API -->
-    <script async defer
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDp2IT1eDBenf32sx9wK9itoLgN6JjEHBw&callback=initMap"
-        onerror="handleMapError()">
-        </script>
+    <!-- Configuration and Google Maps Loader -->
+    <script src="config.js"></script>
+    <script>
+        (function() {
+            const apiKey = window.GOOGLE_MAPS_API_KEY;
+
+            if (!apiKey || apiKey === 'YOUR_API_KEY_HERE') {
+                console.error('Google Maps API Key is missing or invalid.');
+                const loadingOverlay = document.getElementById('loadingOverlay');
+                if (loadingOverlay) {
+                    loadingOverlay.innerHTML = `
+                        <div style="text-align: center; padding: 20px;">
+                            <h2 style="color: #ea4335; margin-bottom: 16px;">⚠️ Configuration Error</h2>
+                            <p style="color: rgba(255,255,255,0.7);">Please configure config.js with a valid API key.</p>
+                        </div>
+                    `;
+                }
+                return;
+            }
+
+            const script = document.createElement('script');
+            script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&callback=initMap`;
+            script.async = true;
+            script.defer = true;
+            script.onerror = handleMapError;
+            document.head.appendChild(script);
+        })();
+    </script>
 </body>
 
 </html>
