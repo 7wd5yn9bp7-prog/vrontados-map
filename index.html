@@ -731,13 +731,14 @@
                     animation: google.maps.Animation.DROP
                 });
 
+                const safeName = place.name.replace(/"/g, '&quot;');
                 const infoWindow = new google.maps.InfoWindow({
                     content: `
                         <div class="info-window">
                             <h3>${place.name}</h3>
                             <p>${place.description}</p>
                             <div class="card-actions">
-                                <button class="street-view-btn" onclick="openStreetView(${place.lat}, ${place.lng})">
+                                <button class="street-view-btn" onclick="openStreetView(${place.lat}, ${place.lng})" aria-label="Street View για ${safeName}">
                                     🏙️ Street View
                                 </button>
                             </div>
@@ -775,15 +776,16 @@
             places.forEach((place, index) => {
                 const card = document.createElement('div');
                 card.className = 'gallery-card';
+                const safeName = place.name.replace(/"/g, '&quot;');
 
                 card.innerHTML = `
                     <h3>${place.name}</h3>
                     <p>${place.description}</p>
                     <div class="card-actions">
-                        <button class="map-view-btn" onclick="showOnMap(${index})">
+                        <button class="map-view-btn" onclick="showOnMap(${index})" aria-label="Δείτε ${safeName} στον Χάρτη">
                             📍 Δείτε στον Χάρτη
                         </button>
-                        <button class="street-view-btn" onclick="openStreetView(${place.lat}, ${place.lng})">
+                        <button class="street-view-btn" onclick="openStreetView(${place.lat}, ${place.lng})" aria-label="Street View για ${safeName}">
                             🏙️ Street View
                         </button>
                     </div>
@@ -835,12 +837,14 @@
                     }
                 });
 
+                const safeName = place.name.replace(/"/g, '&quot;');
+
                 card.innerHTML = `
                     <div class="place-number">${index + 1}</div>
                     <h3>${place.name}</h3>
                     <p>${place.description}</p>
                     <div class="card-actions">
-                        <button class="street-view-btn" onclick="event.stopPropagation(); openStreetView(${place.lat}, ${place.lng})">
+                        <button class="street-view-btn" onclick="event.stopPropagation(); openStreetView(${place.lat}, ${place.lng})" aria-label="Street View για ${safeName}">
                             🏙️ Street View
                         </button>
                     </div>
