@@ -1,0 +1,5 @@
+// This file is a template for the actual config.js
+// In local development, copy this file to config.js and replace the placeholder.
+// In Docker, config.js is generated automatically from the GOOGLE_MAPS_API_KEY environment variable.
+
+window.GOOGLE_MAPS_API_KEY = "YOUR_API_KEY_HERE";

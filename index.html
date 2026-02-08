@@ -905,10 +905,30 @@
     </script>
 
     <!-- Google Maps API -->
-    <script async defer
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDp2IT1eDBenf32sx9wK9itoLgN6JjEHBw&callback=initMap"
-        onerror="handleMapError()">
-        </script>
+    <script src="config.js"></script>
+    <script>
+        function loadGoogleMaps() {
+            if (!window.GOOGLE_MAPS_API_KEY) {
+                console.error('Google Maps API Key is missing. Please check config.js.');
+                handleMapError();
+                return;
+            }
+
+            const script = document.createElement('script');
+            script.src = `https://maps.googleapis.com/maps/api/js?key=${window.GOOGLE_MAPS_API_KEY}&callback=initMap&loading=async`;
+            script.async = true;
+            script.defer = true;
+            script.onerror = handleMapError;
+            document.body.appendChild(script);
+        }
+
+        // Load map when window is ready
+        if (document.readyState === 'complete') {
+            loadGoogleMaps();
+        } else {
+            window.addEventListener('load', loadGoogleMaps);
+        }
+    </script>
 </body>
 
 </html>
