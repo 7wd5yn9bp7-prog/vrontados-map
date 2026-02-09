@@ -600,6 +600,10 @@
         let infoWindows = [];
         let activeMarkerIndex = null;
 
+        function escapeHtml(text) {
+            return text.replace(/"/g, '&quot;');
+        }
+
         // Initialize the map
         function initMap() {
             // Center on Vrontados
@@ -737,7 +741,7 @@
                             <h3>${place.name}</h3>
                             <p>${place.description}</p>
                             <div class="card-actions">
-                                <button class="street-view-btn" onclick="openStreetView(${place.lat}, ${place.lng})">
+                                <button class="street-view-btn" onclick="openStreetView(${place.lat}, ${place.lng})" aria-label="Street View για ${escapeHtml(place.name)}">
                                     🏙️ Street View
                                 </button>
                             </div>
@@ -780,10 +784,10 @@
                     <h3>${place.name}</h3>
                     <p>${place.description}</p>
                     <div class="card-actions">
-                        <button class="map-view-btn" onclick="showOnMap(${index})">
+                        <button class="map-view-btn" onclick="showOnMap(${index})" aria-label="Δείτε ${escapeHtml(place.name)} στον Χάρτη">
                             📍 Δείτε στον Χάρτη
                         </button>
-                        <button class="street-view-btn" onclick="openStreetView(${place.lat}, ${place.lng})">
+                        <button class="street-view-btn" onclick="openStreetView(${place.lat}, ${place.lng})" aria-label="Street View για ${escapeHtml(place.name)}">
                             🏙️ Street View
                         </button>
                     </div>
@@ -840,7 +844,7 @@
                     <h3>${place.name}</h3>
                     <p>${place.description}</p>
                     <div class="card-actions">
-                        <button class="street-view-btn" onclick="event.stopPropagation(); openStreetView(${place.lat}, ${place.lng})">
+                        <button class="street-view-btn" onclick="event.stopPropagation(); openStreetView(${place.lat}, ${place.lng})" aria-label="Street View για ${escapeHtml(place.name)}">
                             🏙️ Street View
                         </button>
                     </div>
