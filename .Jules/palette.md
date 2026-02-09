@@ -1,3 +1,3 @@
-## 2024-10-24 - Interactive Cards Accessibility
-**Learning:** The application uses `div` elements for interactive "cards" (like `.place-card`) without native button semantics.
-**Action:** When creating or modifying such cards, always enforce `role="button"`, `tabindex="0"`, `aria-label`, and `keydown` listeners for Enter/Space to ensure keyboard accessibility.
+## 2024-05-22 - Dynamic ARIA Labels in Lists
+**Learning:** Repetitive buttons like "Street View" or "Show on Map" in a list or grid create a confusing experience for screen reader users as they lack context.
+**Action:** Always include the item name in the button's ARIA label (e.g., "Street View for [Place Name]"). Ensure dynamic values are sanitized (e.g., escaping double quotes) to prevent HTML attribute breakage.
