@@ -31,6 +31,18 @@ This project is a web-based interactive map designed to help visitors explore th
 6. **Αφανής Ναύτης** - A tribute to the town's rich maritime heritage.
 7. **Βιβλιοθήκη "Άγιος Αγαπητός"** - A cultural and spiritual center.
 
+## ⚙️ Configuration
+
+The application requires a Google Maps API key to function correctly.
+
+1. Copy the example configuration file:
+   ```bash
+   cp config.example.js config.js
+   ```
+2. Edit `config.js` and replace `"YOUR_API_KEY_HERE"` with your valid Google Maps API key.
+
+> **Security Note:** `config.js` is git-ignored to prevent accidental exposure of your API credentials.
+
 ## 🚀 Getting Started
 
 ### Local Development

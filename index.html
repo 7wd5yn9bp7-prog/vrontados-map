@@ -541,6 +541,7 @@
         </main>
     </div>
 
+    <script src="config.js"></script>
     <script>
         // Places data with coordinates (verified via web search)
         const places = [
@@ -894,21 +895,36 @@
         }
 
         // Load Google Maps script error handler
-        function handleMapError() {
+        function handleMapError(msg) {
+            console.error('Map loading error:', msg);
             document.getElementById('loadingOverlay').innerHTML = `
                 <div style="text-align: center; padding: 20px;">
                     <h2 style="color: #ea4335; margin-bottom: 16px;">⚠️ Σφάλμα φόρτωσης χάρτη</h2>
-                    <p style="color: rgba(255,255,255,0.7);">Παρακαλώ ελέγξτε τη σύνδεση σας στο internet.</p>
+                    <p style="color: rgba(255,255,255,0.7);">
+                        Αδυναμία φόρτωσης χάρτη.<br>
+                        <small style="opacity: 0.7; font-size: 0.8em">Βεβαιωθείτε ότι το config.js υπάρχει και περιέχει έγκυρο API Key.</small>
+                    </p>
                 </div>
             `;
         }
-    </script>
 
-    <!-- Google Maps API -->
-    <script async defer
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDp2IT1eDBenf32sx9wK9itoLgN6JjEHBw&callback=initMap"
-        onerror="handleMapError()">
-        </script>
+        // Dynamically load Google Maps script
+        function loadGoogleMaps() {
+            if (window.CONFIG && window.CONFIG.GOOGLE_MAPS_API_KEY && window.CONFIG.GOOGLE_MAPS_API_KEY !== 'YOUR_API_KEY_HERE') {
+                const script = document.createElement('script');
+                script.src = `https://maps.googleapis.com/maps/api/js?key=${window.CONFIG.GOOGLE_MAPS_API_KEY}&callback=initMap`;
+                script.async = true;
+                script.defer = true;
+                script.onerror = () => handleMapError('Script load failed');
+                document.head.appendChild(script);
+            } else {
+                handleMapError('Configuration missing or invalid');
+            }
+        }
+
+        // Start loading
+        loadGoogleMaps();
+    </script>
 </body>
 
 </html>
