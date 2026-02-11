@@ -11,3 +11,7 @@ Only add entries for:
 Format: `## YYYY-MM-DD - [Title]
 **Learning:** [Insight]
 **Action:** [How to apply next time]`
+
+## 2024-02-11 - Google Maps InfoWindow Flyweight Pattern
+**Learning:** Creating a new `google.maps.InfoWindow` instance for each marker significantly increases memory usage and DOM overhead, even for small datasets. The "Flyweight" pattern (using a single shared InfoWindow instance) is the standard optimization for Google Maps applications.
+**Action:** Always refactor multiple `InfoWindow` creations into a single shared instance that updates its content and position dynamically.

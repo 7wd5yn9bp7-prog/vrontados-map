@@ -597,13 +597,30 @@
 
         let map;
         let markers = [];
-        let infoWindows = [];
+        // Flyweight pattern: Use a single InfoWindow instance for all markers to reduce memory usage.
+        let sharedInfoWindow;
         let activeMarkerIndex = null;
+
+        function getInfoWindowContent(place) {
+            return `
+                <div class="info-window">
+                    <h3>${place.name}</h3>
+                    <p>${place.description}</p>
+                    <div class="card-actions">
+                        <button class="street-view-btn" onclick="openStreetView(${place.lat}, ${place.lng})">
+                            🏙️ Street View
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
 
         // Initialize the map
         function initMap() {
             // Center on Vrontados
             const vrontados = { lat: 38.4080, lng: 26.1300 };
+
+            sharedInfoWindow = new google.maps.InfoWindow();
 
             map = new google.maps.Map(document.getElementById("map"), {
                 zoom: 14,
@@ -731,24 +748,10 @@
                     animation: google.maps.Animation.DROP
                 });
 
-                const infoWindow = new google.maps.InfoWindow({
-                    content: `
-                        <div class="info-window">
-                            <h3>${place.name}</h3>
-                            <p>${place.description}</p>
-                            <div class="card-actions">
-                                <button class="street-view-btn" onclick="openStreetView(${place.lat}, ${place.lng})">
-                                    🏙️ Street View
-                                </button>
-                            </div>
-                        </div>
-                    `
-                });
-
                 marker.addListener('click', () => {
-                    // Close all other info windows
-                    infoWindows.forEach(iw => iw.close());
-                    infoWindow.open(map, marker);
+                    sharedInfoWindow.close();
+                    sharedInfoWindow.setContent(getInfoWindowContent(place));
+                    sharedInfoWindow.open(map, marker);
 
                     // Update active card
                     setActiveCard(index);
@@ -758,7 +761,6 @@
                 });
 
                 markers.push(marker);
-                infoWindows.push(infoWindow);
             });
 
             // Render place cards
@@ -771,6 +773,9 @@
         function renderGalleryCards() {
             const container = document.getElementById('galleryGrid');
             if (container.children.length > 0) return; // Already rendered
+
+            // Performance: Use DocumentFragment to batch DOM insertions and minimize reflows.
+            const fragment = document.createDocumentFragment();
 
             places.forEach((place, index) => {
                 const card = document.createElement('div');
@@ -788,8 +793,10 @@
                         </button>
                     </div>
                 `;
-                container.appendChild(card);
+                fragment.appendChild(card);
             });
+
+            container.appendChild(fragment);
         }
 
         function showOnMap(index) {
@@ -801,8 +808,10 @@
             viewToggle.innerHTML = '<span>🖼️ Προβολή Συλλογής</span>';
 
             // Focus on marker
-            infoWindows.forEach(iw => iw.close());
-            infoWindows[index].open(map, markers[index]);
+            sharedInfoWindow.close();
+            sharedInfoWindow.setContent(getInfoWindowContent(places[index]));
+            sharedInfoWindow.open(map, markers[index]);
+
             map.panTo(markers[index].getPosition());
             map.setZoom(16);
 
@@ -816,6 +825,8 @@
 
         function renderPlaceCards() {
             const container = document.getElementById('placesList');
+            // Performance: Use DocumentFragment to batch DOM insertions and minimize reflows.
+            const fragment = document.createDocumentFragment();
 
             places.forEach((place, index) => {
                 const card = document.createElement('div');
@@ -847,11 +858,9 @@
                 `;
 
                 card.addEventListener('click', () => {
-                    // Close all info windows
-                    infoWindows.forEach(iw => iw.close());
-
-                    // Open the corresponding info window
-                    infoWindows[index].open(map, markers[index]);
+                    sharedInfoWindow.close();
+                    sharedInfoWindow.setContent(getInfoWindowContent(places[index]));
+                    sharedInfoWindow.open(map, markers[index]);
 
                     // Center and zoom on marker
                     map.panTo(markers[index].getPosition());
@@ -867,8 +876,10 @@
                     setActiveCard(index);
                 });
 
-                container.appendChild(card);
+                fragment.appendChild(card);
             });
+
+            container.appendChild(fragment);
         }
 
         function openStreetView(lat, lng) {
