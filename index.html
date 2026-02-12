@@ -541,6 +541,7 @@
         </main>
     </div>
 
+    <script src="config.js"></script>
     <script>
         // Places data with coordinates (verified via web search)
         const places = [
@@ -899,16 +900,35 @@
                 <div style="text-align: center; padding: 20px;">
                     <h2 style="color: #ea4335; margin-bottom: 16px;">⚠️ Σφάλμα φόρτωσης χάρτη</h2>
                     <p style="color: rgba(255,255,255,0.7);">Παρακαλώ ελέγξτε τη σύνδεση σας στο internet.</p>
+                    <p style="color: rgba(255,255,255,0.5); font-size: 0.8em; margin-top: 10px;">Βεβαιωθείτε ότι το <code>config.js</code> είναι σωστά ρυθμισμένο.</p>
                 </div>
             `;
         }
-    </script>
 
-    <!-- Google Maps API -->
-    <script async defer
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDp2IT1eDBenf32sx9wK9itoLgN6JjEHBw&callback=initMap"
-        onerror="handleMapError()">
-        </script>
+        // Dynamic Map Loader
+        (function() {
+            const apiKey = window.CONFIG?.GOOGLE_MAPS_API_KEY;
+
+            if (!apiKey || apiKey === 'YOUR_API_KEY_HERE') {
+                console.error('Google Maps API Key is missing or invalid.');
+                document.getElementById('loadingOverlay').innerHTML = `
+                    <div style="text-align: center; padding: 20px;">
+                        <h2 style="color: #ea4335; margin-bottom: 16px;">⚠️ Ρύθμιση Απαραίτητη</h2>
+                        <p style="color: rgba(255,255,255,0.9);">Παρακαλώ προσθέστε το Google Maps API Key στο αρχείο <code>config.js</code>.</p>
+                        <p style="color: rgba(255,255,255,0.7); margin-top: 10px; font-size: 0.9em;">Αντιγράψτε το <code>config.example.js</code> σε <code>config.js</code> και επεξεργαστείτε το.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const script = document.createElement('script');
+            script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&callback=initMap`;
+            script.async = true;
+            script.defer = true;
+            script.onerror = handleMapError;
+            document.head.appendChild(script);
+        })();
+    </script>
 </body>
 
 </html>
