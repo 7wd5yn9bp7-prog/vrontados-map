@@ -33,6 +33,16 @@ This project is a web-based interactive map designed to help visitors explore th
 
 ## 🚀 Getting Started
 
+### Configuration
+
+Before running the application, you must configure your Google Maps API Key.
+
+1. Copy `config.example.js` to `config.js`:
+   ```bash
+   cp config.example.js config.js
+   ```
+2. Edit `config.js` and replace `YOUR_API_KEY_HERE` with your valid Google Maps API Key.
+
 ### Local Development
 
 #### Using Python (Quick Start)
@@ -42,13 +52,15 @@ python3 -m http.server 8080
 Then open `http://localhost:8080` in your browser.
 
 #### Using Docker
+The Docker image copies `config.example.js` to `config.js`. You can mount a volume to override it with your real configuration.
+
 1. Build the image:
    ```bash
    docker build -t vrontados-map .
    ```
 2. Run the container:
    ```bash
-   docker run -p 8080:8080 vrontados-map
+   docker run -v $(pwd)/config.js:/usr/share/nginx/html/config.js -p 8080:8080 vrontados-map
    ```
 Access the application at `http://localhost:8080`.
 
