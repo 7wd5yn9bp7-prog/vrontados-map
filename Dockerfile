@@ -1,6 +1,7 @@
 FROM nginx:alpine
 
 # Copy the static files to nginx html directory
+COPY config.example.js /usr/share/nginx/html/config.js
 COPY index.html /usr/share/nginx/html/
 
 # Copy custom nginx config for Cloud Run (uses PORT env variable)
