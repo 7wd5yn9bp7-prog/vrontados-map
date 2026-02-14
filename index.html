@@ -503,6 +503,9 @@
         <div class="loading-text">Φόρτωση χάρτη...</div>
     </div>
 
+    <!-- Configuration -->
+    <script src="config.js"></script>
+
     <div class="container">
         <aside class="sidebar">
             <div class="sidebar-header">
@@ -902,13 +905,30 @@
                 </div>
             `;
         }
-    </script>
 
-    <!-- Google Maps API -->
-    <script async defer
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDp2IT1eDBenf32sx9wK9itoLgN6JjEHBw&callback=initMap"
-        onerror="handleMapError()">
-        </script>
+        // Dynamic Script Loading
+        function loadGoogleMaps() {
+            if (window.CONFIG && window.CONFIG.GOOGLE_MAPS_API_KEY && window.CONFIG.GOOGLE_MAPS_API_KEY !== 'YOUR_API_KEY_HERE') {
+                const script = document.createElement('script');
+                script.src = `https://maps.googleapis.com/maps/api/js?key=${window.CONFIG.GOOGLE_MAPS_API_KEY}&callback=initMap`;
+                script.async = true;
+                script.defer = true;
+                script.onerror = handleMapError;
+                document.body.appendChild(script);
+            } else {
+                document.getElementById('loadingOverlay').innerHTML = `
+                    <div style="text-align: center; padding: 20px;">
+                        <h2 style="color: #ea4335; margin-bottom: 16px;">⚠️ Σφάλμα Διαμόρφωσης</h2>
+                        <p style="color: rgba(255,255,255,0.7);">Λείπει το κλειδί API του Google Maps.</p>
+                        <p style="font-size: 0.8rem; margin-top: 8px; color: rgba(255,255,255,0.5);">Παρακαλώ προσθέστε το config.js</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Start loading the map
+        loadGoogleMaps();
+    </script>
 </body>
 
 </html>
