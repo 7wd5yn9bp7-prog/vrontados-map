@@ -28,6 +28,7 @@
             --text-secondary: rgba(255, 255, 255, 0.7);
             --shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
             --glass-blur: blur(20px);
+            --sidebar-width: 400px;
         }
 
         * {
@@ -51,7 +52,7 @@
 
         /* Sidebar */
         .sidebar {
-            width: 400px;
+            width: var(--sidebar-width);
             background: var(--card-bg);
             backdrop-filter: var(--glass-blur);
             -webkit-backdrop-filter: var(--glass-blur);
@@ -59,12 +60,31 @@
             display: flex;
             flex-direction: column;
             overflow: hidden;
+            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .sidebar.collapsed {
+            width: 60px;
+        }
+
+        .sidebar.collapsed .places-list,
+        .sidebar.collapsed .sidebar-header p,
+        .sidebar.collapsed .sidebar-header h1 {
+            display: none;
+        }
+
+        .sidebar.collapsed .sidebar-header {
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .sidebar-header {
             padding: 24px;
             background: linear-gradient(180deg, rgba(26, 115, 232, 0.2) 0%, transparent 100%);
             border-bottom: 1px solid var(--card-border);
+            position: relative;
         }
 
         .sidebar-header h1 {
@@ -80,6 +100,32 @@
         .sidebar-header p {
             font-size: 0.875rem;
             color: var(--text-secondary);
+            padding-right: 36px;
+        }
+
+        .sidebar-toggle {
+            position: absolute;
+            top: 50%;
+            right: 12px;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            padding: 6px 8px;
+            color: var(--text-primary);
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+            line-height: 1;
+        }
+
+        .sidebar-toggle:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .sidebar.collapsed .sidebar-toggle {
+            position: static;
+            transform: none;
         }
 
         .places-list {
@@ -111,6 +157,7 @@
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             overflow: hidden;
+            animation: fadeInUp 0.4s ease both;
         }
 
         .place-card::before {
@@ -145,6 +192,8 @@
         .place-card.active {
             border-color: var(--primary);
             background: rgba(26, 115, 232, 0.15);
+            box-shadow: 0 0 20px rgba(26, 115, 232, 0.2), var(--shadow);
+            transform: translateY(-2px);
         }
 
         .place-card.active::before {
@@ -181,6 +230,16 @@
             overflow: hidden;
         }
 
+        .place-distance {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            margin-top: 8px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            opacity: 0.8;
+        }
+
         /* Map Container */
         .map-container {
             flex: 1;
@@ -192,7 +251,25 @@
             height: 100%;
         }
 
-        /* Info Window Styling */
+        /* Info Window Styling - Dark Theme */
+        .gm-style-iw {
+            background: #1a1a2e !important;
+            border-radius: 16px !important;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5) !important;
+        }
+
+        .gm-style-iw-d {
+            overflow: auto !important;
+        }
+
+        .gm-style-iw-tc::after {
+            background: #1a1a2e !important;
+        }
+
+        .gm-ui-hover-effect > span {
+            background-color: white !important;
+        }
+
         .info-window {
             max-width: 300px;
             padding: 12px;
@@ -201,14 +278,18 @@
         .info-window h3 {
             font-size: 1.1rem;
             font-weight: 600;
-            color: #1a1a2e;
+            color: #ffffff;
             margin-bottom: 8px;
         }
 
         .info-window p {
             font-size: 0.85rem;
-            color: #555;
+            color: rgba(255, 255, 255, 0.7);
             line-height: 1.6;
+        }
+
+        .info-window .street-view-btn {
+            margin-top: 12px;
         }
 
         /* Floating Badge */
@@ -351,6 +432,7 @@
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             height: 100%;
+            animation: fadeInUp 0.4s ease both;
         }
 
         .gallery-card::before {
@@ -363,16 +445,22 @@
             background: linear-gradient(90deg, var(--primary), var(--secondary));
             opacity: 0;
             transition: opacity 0.3s ease;
+            border-radius: 24px 24px 0 0;
         }
 
         .gallery-card:hover {
             transform: translateY(-8px);
             border-color: var(--primary);
-            box-shadow: var(--shadow);
+            box-shadow: 0 12px 40px rgba(26, 115, 232, 0.15), var(--shadow);
         }
 
         .gallery-card:hover::before {
             opacity: 1;
+        }
+
+        .gallery-card:focus-within {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.3);
         }
 
         .gallery-card h3 {
@@ -395,6 +483,10 @@
             display: flex;
             flex-wrap: wrap;
             gap: 12px;
+        }
+
+        .gallery-card .place-distance {
+            margin-top: 0;
         }
 
         .map-view-btn {
@@ -435,7 +527,59 @@
             }
         }
 
-        /* Responsive */
+        /* Mobile Tab Bar */
+        .mobile-tab-bar {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(15, 12, 41, 0.95);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border-top: 1px solid var(--card-border);
+            z-index: 2000;
+            padding: 8px 0;
+            padding-bottom: max(8px, env(safe-area-inset-bottom));
+        }
+
+        .mobile-tab-bar .tabs {
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .mobile-tab-bar .tab {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 500;
+            cursor: pointer;
+            padding: 8px 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            transition: color 0.3s ease;
+        }
+
+        .mobile-tab-bar .tab.active {
+            color: var(--primary);
+        }
+
+        .mobile-tab-bar .tab-icon {
+            font-size: 1.2rem;
+        }
+
+        /* Responsive - Large desktops */
+        @media (max-width: 1200px) {
+            :root {
+                --sidebar-width: 350px;
+            }
+        }
+
+        /* Responsive - Tablets */
         @media (max-width: 900px) {
             .container {
                 flex-direction: column;
@@ -448,8 +592,123 @@
                 border-bottom: 1px solid var(--card-border);
             }
 
+            .sidebar.collapsed {
+                width: 100%;
+                height: auto;
+            }
+
             .map-container {
                 height: 55vh;
+            }
+
+            .sidebar-toggle {
+                display: none;
+            }
+
+            .gallery-view {
+                padding: 80px 24px 24px 24px;
+            }
+
+            .gallery-view-header h2 {
+                font-size: 1.8rem;
+            }
+
+            .gallery-grid {
+                gap: 20px;
+            }
+
+            .gallery-card {
+                padding: 24px;
+                border-radius: 16px;
+            }
+        }
+
+        /* Responsive - Small phones with tab layout */
+        @media (max-width: 600px) {
+            .mobile-tab-bar {
+                display: block;
+            }
+
+            .container {
+                flex-direction: column;
+                height: calc(100vh - 64px);
+            }
+
+            .sidebar {
+                width: 100%;
+                height: 100%;
+                border-bottom: none;
+                display: none;
+            }
+
+            .sidebar.mobile-visible {
+                display: flex;
+            }
+
+            .map-container {
+                height: 100%;
+                display: block;
+            }
+
+            .map-container.mobile-hidden {
+                display: none;
+            }
+
+            .sidebar-header {
+                padding: 16px;
+            }
+
+            .sidebar-header h1 {
+                font-size: 1.2rem;
+            }
+
+            .places-list {
+                padding: 12px;
+            }
+
+            .place-card {
+                padding: 16px;
+            }
+
+            /* Larger touch targets on mobile */
+            .street-view-btn,
+            .map-view-btn {
+                padding: 12px 18px;
+                font-size: 0.8rem;
+                min-height: 44px;
+            }
+
+            .map-btn {
+                padding: 12px 16px;
+                min-height: 44px;
+            }
+
+            .floating-badge {
+                bottom: 16px;
+                right: 16px;
+                font-size: 0.75rem;
+                padding: 10px 16px;
+            }
+
+            .map-controls {
+                top: 16px;
+                right: 16px;
+            }
+
+            .gallery-view {
+                padding: 60px 16px 16px 16px;
+            }
+
+            .gallery-view-header h2 {
+                font-size: 1.5rem;
+            }
+
+            .gallery-grid {
+                gap: 16px;
+            }
+
+            .gallery-card {
+                padding: 20px;
             }
         }
 
@@ -481,12 +740,33 @@
             border-top-color: var(--primary);
             border-radius: 50%;
             animation: spin 1s linear infinite;
+            transition: all 0.4s ease;
+        }
+
+        .loading-spinner.success {
+            border-color: var(--secondary);
+            border-top-color: var(--secondary);
+            animation: none;
+            background: var(--secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .loading-spinner.success::after {
+            content: '';
+            width: 12px;
+            height: 22px;
+            border: solid white;
+            border-width: 0 3px 3px 0;
+            transform: rotate(45deg) translate(-2px, -2px);
         }
 
         .loading-text {
             margin-top: 16px;
             color: var(--text-secondary);
             font-size: 0.9rem;
+            transition: all 0.3s ease;
         }
 
         @keyframes spin {
@@ -499,22 +779,23 @@
 
 <body>
     <div class="loading-overlay" id="loadingOverlay">
-        <div class="loading-spinner"></div>
-        <div class="loading-text">Φόρτωση χάρτη...</div>
+        <div class="loading-spinner" id="loadingSpinner"></div>
+        <div class="loading-text" id="loadingText">Φόρτωση χάρτη...</div>
     </div>
 
-    <div class="container">
-        <aside class="sidebar">
+    <div class="container" id="mainContainer">
+        <aside class="sidebar" id="sidebar">
             <div class="sidebar-header">
                 <h1>🏛️ Αξιοθέατα Βροντάδου</h1>
                 <p>Εξερευνήστε τα ιστορικά και πολιτιστικά μνημεία της περιοχής</p>
+                <button class="sidebar-toggle" id="sidebarToggle" aria-label="Σύμπτυξη πλευρικής μπάρας">◀</button>
             </div>
             <div class="places-list" id="placesList">
                 <!-- Places will be dynamically inserted here -->
             </div>
         </aside>
 
-        <main class="map-container">
+        <main class="map-container" id="mapContainer">
             <div id="map"></div>
 
             <div id="galleryView" class="gallery-view hidden">
@@ -533,12 +814,28 @@
                 <button id="mapTypeToggle" class="map-btn">
                     <span>🛰️ Δορυφόρος</span>
                 </button>
+                <button id="fitAllBtn" class="map-btn">
+                    <span>📍 Όλα τα σημεία</span>
+                </button>
             </div>
 
             <div class="floating-badge">
                 <span>7</span> αξιοθέατα στον χάρτη
             </div>
         </main>
+    </div>
+
+    <div class="mobile-tab-bar" id="mobileTabBar">
+        <div class="tabs">
+            <button class="tab active" id="tabMap">
+                <span class="tab-icon">🗺️</span>
+                Χάρτης
+            </button>
+            <button class="tab" id="tabList">
+                <span class="tab-icon">📋</span>
+                Λίστα
+            </button>
+        </div>
     </div>
 
     <script>
@@ -595,10 +892,43 @@
             }
         ];
 
+        // Vrontados center for distance calculations
+        const VRONTADOS_CENTER = { lat: 38.4080, lng: 26.1300 };
+
         let map;
         let markers = [];
         let infoWindows = [];
         let activeMarkerIndex = null;
+
+        // Calculate distance between two points using Haversine formula
+        function calculateDistance(lat1, lng1, lat2, lng2) {
+            const R = 6371; // Earth's radius in km
+            const dLat = (lat2 - lat1) * Math.PI / 180;
+            const dLng = (lng2 - lng1) * Math.PI / 180;
+            const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                      Math.sin(dLng / 2) * Math.sin(dLng / 2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+            return R * c;
+        }
+
+        function formatDistance(km) {
+            if (km < 1) {
+                return Math.round(km * 1000) + 'm';
+            }
+            return km.toFixed(1) + 'km';
+        }
+
+        // Fit all markers in view
+        function fitAllMarkers() {
+            if (markers.length === 0) return;
+            const bounds = new google.maps.LatLngBounds();
+            markers.forEach(marker => bounds.extend(marker.getPosition()));
+            map.fitBounds(bounds);
+            infoWindows.forEach(iw => iw.close());
+            document.querySelectorAll('.place-card').forEach(card => card.classList.remove('active'));
+            activeMarkerIndex = null;
+        }
 
         // Initialize the map
         function initMap() {
@@ -716,6 +1046,40 @@
                 }
             });
 
+            // Fit All Markers Button
+            document.getElementById('fitAllBtn').addEventListener('click', fitAllMarkers);
+
+            // Sidebar Toggle (desktop only)
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            const sidebar = document.getElementById('sidebar');
+            sidebarToggle.addEventListener('click', () => {
+                sidebar.classList.toggle('collapsed');
+                sidebarToggle.textContent = sidebar.classList.contains('collapsed') ? '▶' : '◀';
+                sidebarToggle.setAttribute('aria-label',
+                    sidebar.classList.contains('collapsed') ? 'Ανάπτυξη πλευρικής μπάρας' : 'Σύμπτυξη πλευρικής μπάρας'
+                );
+            });
+
+            // Mobile Tab Bar Logic
+            const tabMap = document.getElementById('tabMap');
+            const tabList = document.getElementById('tabList');
+            const mapContainer = document.getElementById('mapContainer');
+
+            function switchMobileTab(tab) {
+                tabMap.classList.toggle('active', tab === 'map');
+                tabList.classList.toggle('active', tab === 'list');
+                if (tab === 'list') {
+                    sidebar.classList.add('mobile-visible');
+                    mapContainer.classList.add('mobile-hidden');
+                } else {
+                    sidebar.classList.remove('mobile-visible');
+                    mapContainer.classList.remove('mobile-hidden');
+                }
+            }
+
+            tabMap.addEventListener('click', () => switchMobileTab('map'));
+            tabList.addEventListener('click', () => switchMobileTab('list'));
+
             // Create markers for each place
             places.forEach((place, index) => {
                 const marker = new google.maps.Marker({
@@ -764,8 +1128,14 @@
             // Render place cards
             renderPlaceCards();
 
-            // Hide loading overlay
-            document.getElementById('loadingOverlay').classList.add('hidden');
+            // Loading success animation
+            const spinner = document.getElementById('loadingSpinner');
+            const loadingText = document.getElementById('loadingText');
+            spinner.classList.add('success');
+            loadingText.textContent = 'Ο χάρτης φορτώθηκε!';
+            setTimeout(() => {
+                document.getElementById('loadingOverlay').classList.add('hidden');
+            }, 600);
         }
 
         function renderGalleryCards() {
@@ -775,10 +1145,14 @@
             places.forEach((place, index) => {
                 const card = document.createElement('div');
                 card.className = 'gallery-card';
+                card.style.animationDelay = `${index * 0.07}s`;
+
+                const dist = calculateDistance(VRONTADOS_CENTER.lat, VRONTADOS_CENTER.lng, place.lat, place.lng);
 
                 card.innerHTML = `
                     <h3>${place.name}</h3>
                     <p>${place.description}</p>
+                    <div class="place-distance">📍 ~${formatDistance(dist)} από το κέντρο</div>
                     <div class="card-actions">
                         <button class="map-view-btn" onclick="showOnMap(${index})">
                             📍 Δείτε στον Χάρτη
@@ -821,6 +1195,7 @@
                 const card = document.createElement('div');
                 card.className = 'place-card';
                 card.id = `place-${index}`;
+                card.style.animationDelay = `${index * 0.05}s`;
 
                 // Accessibility
                 card.setAttribute('role', 'button');
@@ -835,10 +1210,13 @@
                     }
                 });
 
+                const dist = calculateDistance(VRONTADOS_CENTER.lat, VRONTADOS_CENTER.lng, place.lat, place.lng);
+
                 card.innerHTML = `
                     <div class="place-number">${index + 1}</div>
                     <h3>${place.name}</h3>
                     <p>${place.description}</p>
+                    <div class="place-distance">📍 ~${formatDistance(dist)} από το κέντρο</div>
                     <div class="card-actions">
                         <button class="street-view-btn" onclick="event.stopPropagation(); openStreetView(${place.lat}, ${place.lng})">
                             🏙️ Street View
@@ -865,6 +1243,14 @@
 
                     // Set active card
                     setActiveCard(index);
+
+                    // On mobile, switch to map tab after selecting a card
+                    if (window.innerWidth <= 600) {
+                        document.getElementById('sidebar').classList.remove('mobile-visible');
+                        document.getElementById('mapContainer').classList.remove('mobile-hidden');
+                        document.getElementById('tabMap').classList.add('active');
+                        document.getElementById('tabList').classList.remove('active');
+                    }
                 });
 
                 container.appendChild(card);
