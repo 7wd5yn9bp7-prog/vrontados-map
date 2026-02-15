@@ -894,21 +894,35 @@
         }
 
         // Load Google Maps script error handler
-        function handleMapError() {
+        function handleMapError(message) {
+            const msgText = typeof message === 'string' ? message : 'Παρακαλώ ελέγξτε τη σύνδεση σας στο internet.';
             document.getElementById('loadingOverlay').innerHTML = `
                 <div style="text-align: center; padding: 20px;">
                     <h2 style="color: #ea4335; margin-bottom: 16px;">⚠️ Σφάλμα φόρτωσης χάρτη</h2>
-                    <p style="color: rgba(255,255,255,0.7);">Παρακαλώ ελέγξτε τη σύνδεση σας στο internet.</p>
+                    <p style="color: rgba(255,255,255,0.7);">${msgText}</p>
                 </div>
             `;
         }
+
+        function loadGoogleMaps() {
+            if (typeof window.CONFIG === 'undefined' || !window.CONFIG.GOOGLE_MAPS_API_KEY || window.CONFIG.GOOGLE_MAPS_API_KEY === 'YOUR_API_KEY_HERE') {
+                handleMapError('Δεν βρέθηκε έγκυρο κλειδί API. Παρακαλώ ρυθμίστε το config.js.');
+                return;
+            }
+
+            const script = document.createElement('script');
+            script.src = `https://maps.googleapis.com/maps/api/js?key=${window.CONFIG.GOOGLE_MAPS_API_KEY}&callback=initMap`;
+            script.async = true;
+            script.defer = true;
+            script.onerror = () => handleMapError();
+            document.head.appendChild(script);
+        }
+
+        window.addEventListener('load', loadGoogleMaps);
     </script>
 
-    <!-- Google Maps API -->
-    <script async defer
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDp2IT1eDBenf32sx9wK9itoLgN6JjEHBw&callback=initMap"
-        onerror="handleMapError()">
-        </script>
+    <!-- Configuration -->
+    <script src="config.js"></script>
 </body>
 
 </html>
