@@ -35,6 +35,13 @@ This project is a web-based interactive map designed to help visitors explore th
 
 ### Local Development
 
+1. **Configure API Key:**
+   Copy `config.example.js` to `config.js` and add your Google Maps API key:
+   ```bash
+   cp config.example.js config.js
+   # Edit config.js and replace 'YOUR_API_KEY_HERE' with your actual key
+   ```
+
 #### Using Python (Quick Start)
 ```bash
 python3 -m http.server 8080
