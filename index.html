@@ -838,6 +838,9 @@
         </div>
     </div>
 
+    <!-- Configuration -->
+    <script src="config.js"></script>
+
     <script>
         // Places data with coordinates (verified via web search)
         const places = [
@@ -1288,13 +1291,41 @@
                 </div>
             `;
         }
-    </script>
 
-    <!-- Google Maps API -->
-    <script async defer
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDp2IT1eDBenf32sx9wK9itoLgN6JjEHBw&callback=initMap"
-        onerror="handleMapError()">
-        </script>
+        // Load Google Maps API dynamically from config
+        function loadGoogleMaps() {
+            const loadingOverlay = document.getElementById('loadingOverlay');
+
+            // Check if config exists and has a valid key
+            if (!window.CONFIG || !window.CONFIG.GOOGLE_MAPS_API_KEY || window.CONFIG.GOOGLE_MAPS_API_KEY === 'YOUR_API_KEY_HERE') {
+                console.error('Google Maps API key is missing or invalid.');
+                loadingOverlay.innerHTML = `
+                    <div style="text-align: center; padding: 20px;">
+                        <h2 style="color: #ea4335; margin-bottom: 16px;">⚠️ Missing Configuration</h2>
+                        <p style="color: rgba(255,255,255,0.7);">Please configure the Google Maps API key in <code>config.js</code>.</p>
+                        <p style="color: rgba(255,255,255,0.5); font-size: 0.8em; margin-top: 10px;">(Copy <code>config.example.js</code> to <code>config.js</code> and add your key)</p>
+                    </div>
+                `;
+                // Make sure overlay is visible
+                loadingOverlay.classList.remove('hidden');
+                return;
+            }
+
+            const script = document.createElement('script');
+            script.src = `https://maps.googleapis.com/maps/api/js?key=${window.CONFIG.GOOGLE_MAPS_API_KEY}&callback=initMap`;
+            script.async = true;
+            script.defer = true;
+            script.onerror = handleMapError;
+            document.head.appendChild(script);
+        }
+
+        // Initialize when DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', loadGoogleMaps);
+        } else {
+            loadGoogleMaps();
+        }
+    </script>
 </body>
 
 </html>
