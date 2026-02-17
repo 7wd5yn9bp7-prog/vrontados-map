@@ -1290,11 +1290,55 @@
         }
     </script>
 
-    <!-- Google Maps API -->
-    <script async defer
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDp2IT1eDBenf32sx9wK9itoLgN6JjEHBw&callback=initMap"
-        onerror="handleMapError()">
-        </script>
+    <!-- Google Maps API Loader -->
+    <script src="config.js"></script>
+    <script>
+        function loadGoogleMaps() {
+            // Check if config exists and has a valid key
+            const hasConfig = window.CONFIG && window.CONFIG.GOOGLE_MAPS_API_KEY;
+            const isPlaceholder = hasConfig && window.CONFIG.GOOGLE_MAPS_API_KEY === 'YOUR_API_KEY_HERE';
+
+            if (!hasConfig || isPlaceholder) {
+                // Show error overlay
+                const overlay = document.getElementById('loadingOverlay');
+                const spinner = document.getElementById('loadingSpinner');
+                const text = document.getElementById('loadingText');
+
+                if (overlay && spinner && text) {
+                    overlay.classList.remove('hidden');
+                    spinner.style.display = 'none'; // Hide spinner
+
+                    text.innerHTML = `
+                        <div style="text-align: center; padding: 20px;">
+                            <h2 style="color: #ea4335; margin-bottom: 16px;">⚠️ Missing Configuration</h2>
+                            <p style="color: rgba(255,255,255,0.7); margin-bottom: 8px;">
+                                Please create <code>config.js</code> based on <code>config.example.js</code>
+                            </p>
+                            <p style="color: rgba(255,255,255,0.7);">
+                                and add your Google Maps API Key.
+                            </p>
+                        </div>
+                    `;
+                }
+                return;
+            }
+
+            // Load Google Maps API
+            const script = document.createElement('script');
+            script.src = `https://maps.googleapis.com/maps/api/js?key=${window.CONFIG.GOOGLE_MAPS_API_KEY}&callback=initMap&loading=async`;
+            script.async = true;
+            script.defer = true;
+            script.onerror = handleMapError;
+            document.head.appendChild(script);
+        }
+
+        // Initialize loader
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', loadGoogleMaps);
+        } else {
+            loadGoogleMaps();
+        }
+    </script>
 </body>
 
 </html>
