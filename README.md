@@ -33,6 +33,14 @@ This project is a web-based interactive map designed to help visitors explore th
 
 ## 🚀 Getting Started
 
+### 🔑 Configuration
+
+1. Copy `config.example.js` to `config.js`:
+   ```bash
+   cp config.example.js config.js
+   ```
+2. Open `config.js` and replace `YOUR_API_KEY_HERE` with your valid Google Maps API Key.
+
 ### Local Development
 
 #### Using Python (Quick Start)
