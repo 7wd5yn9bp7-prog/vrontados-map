@@ -1095,13 +1095,15 @@
                     animation: google.maps.Animation.DROP
                 });
 
+                const safeName = place.name.replace(/"/g, '&quot;');
+
                 const infoWindow = new google.maps.InfoWindow({
                     content: `
                         <div class="info-window">
                             <h3>${place.name}</h3>
                             <p>${place.description}</p>
                             <div class="card-actions">
-                                <button class="street-view-btn" onclick="openStreetView(${place.lat}, ${place.lng})">
+                                <button class="street-view-btn" onclick="openStreetView(${place.lat}, ${place.lng})" aria-label="Street View για ${safeName}">
                                     🏙️ Street View
                                 </button>
                             </div>
@@ -1148,16 +1150,17 @@
                 card.style.animationDelay = `${index * 0.07}s`;
 
                 const dist = calculateDistance(VRONTADOS_CENTER.lat, VRONTADOS_CENTER.lng, place.lat, place.lng);
+                const safeName = place.name.replace(/"/g, '&quot;');
 
                 card.innerHTML = `
                     <h3>${place.name}</h3>
                     <p>${place.description}</p>
                     <div class="place-distance">📍 ~${formatDistance(dist)} από το κέντρο</div>
                     <div class="card-actions">
-                        <button class="map-view-btn" onclick="showOnMap(${index})">
+                        <button class="map-view-btn" onclick="showOnMap(${index})" aria-label="Δείτε το ${safeName} στον Χάρτη">
                             📍 Δείτε στον Χάρτη
                         </button>
-                        <button class="street-view-btn" onclick="openStreetView(${place.lat}, ${place.lng})">
+                        <button class="street-view-btn" onclick="openStreetView(${place.lat}, ${place.lng})" aria-label="Street View για ${safeName}">
                             🏙️ Street View
                         </button>
                     </div>
@@ -1211,6 +1214,7 @@
                 });
 
                 const dist = calculateDistance(VRONTADOS_CENTER.lat, VRONTADOS_CENTER.lng, place.lat, place.lng);
+                const safeName = place.name.replace(/"/g, '&quot;');
 
                 card.innerHTML = `
                     <div class="place-number">${index + 1}</div>
@@ -1218,7 +1222,7 @@
                     <p>${place.description}</p>
                     <div class="place-distance">📍 ~${formatDistance(dist)} από το κέντρο</div>
                     <div class="card-actions">
-                        <button class="street-view-btn" onclick="event.stopPropagation(); openStreetView(${place.lat}, ${place.lng})">
+                        <button class="street-view-btn" onclick="event.stopPropagation(); openStreetView(${place.lat}, ${place.lng})" aria-label="Street View για ${safeName}">
                             🏙️ Street View
                         </button>
                     </div>
