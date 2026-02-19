@@ -838,6 +838,9 @@
         </div>
     </div>
 
+    <!-- Configuration -->
+    <script src="config.js"></script>
+
     <script>
         // Places data with coordinates (verified via web search)
         const places = [
@@ -1288,13 +1291,31 @@
                 </div>
             `;
         }
-    </script>
 
-    <!-- Google Maps API -->
-    <script async defer
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDp2IT1eDBenf32sx9wK9itoLgN6JjEHBw&callback=initMap"
-        onerror="handleMapError()">
-        </script>
+        // Dynamically load Google Maps API
+        function loadGoogleMaps() {
+            if (!window.CONFIG || !window.CONFIG.GOOGLE_MAPS_API_KEY || window.CONFIG.GOOGLE_MAPS_API_KEY === 'YOUR_API_KEY_HERE') {
+                document.getElementById('loadingOverlay').innerHTML = `
+                    <div style="text-align: center; padding: 20px; max-width: 400px;">
+                        <h2 style="color: #ea4335; margin-bottom: 16px;">⚠️ Missing Configuration</h2>
+                        <p style="color: rgba(255,255,255,0.7); margin-bottom: 12px;">Google Maps API Key is missing.</p>
+                        <p style="font-size: 0.8rem; color: rgba(255,255,255,0.5);">Please configure <code>config.js</code> with your API key.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const script = document.createElement('script');
+            script.src = `https://maps.googleapis.com/maps/api/js?key=${window.CONFIG.GOOGLE_MAPS_API_KEY}&callback=initMap`;
+            script.async = true;
+            script.defer = true;
+            script.onerror = handleMapError;
+            document.head.appendChild(script);
+        }
+
+        // Initialize loading
+        loadGoogleMaps();
+    </script>
 </body>
 
 </html>
