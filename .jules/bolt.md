@@ -11,3 +11,7 @@ Only add entries for:
 Format: `## YYYY-MM-DD - [Title]
 **Learning:** [Insight]
 **Action:** [How to apply next time]`
+
+## 2024-05-23 - [Google Maps InfoWindow Instantiation]
+**Learning:** The application was creating a new `google.maps.InfoWindow` instance for every marker, which scales linearly (O(n)) with the number of places.
+**Action:** Implemented the Flyweight pattern by using a single shared `InfoWindow` instance and updating its content dynamically. This reduces memory usage to O(1) regardless of the number of markers.
