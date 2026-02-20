@@ -31,11 +31,21 @@ This project is a web-based interactive map designed to help visitors explore th
 6. **Αφανής Ναύτης** - A tribute to the town's rich maritime heritage.
 7. **Βιβλιοθήκη "Άγιος Αγαπητός"** - A cultural and spiritual center.
 
+## ⚙️ Configuration
+
+1. Copy `config.example.js` to `config.js`:
+   ```bash
+   cp config.example.js config.js
+   ```
+2. Edit `config.js` and replace `YOUR_API_KEY_HERE` with your valid Google Maps API Key.
+
 ## 🚀 Getting Started
 
 ### Local Development
 
 #### Using Python (Quick Start)
+Make sure you have configured `config.js` as described above.
+
 ```bash
 python3 -m http.server 8080
 ```
@@ -46,9 +56,9 @@ Then open `http://localhost:8080` in your browser.
    ```bash
    docker build -t vrontados-map .
    ```
-2. Run the container:
+2. Run the container (mounting your local config.js):
    ```bash
-   docker run -p 8080:8080 vrontados-map
+   docker run -p 8080:8080 -v $(pwd)/config.js:/usr/share/nginx/html/config.js vrontados-map
    ```
 Access the application at `http://localhost:8080`.
 
