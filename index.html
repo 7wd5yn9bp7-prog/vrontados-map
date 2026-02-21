@@ -897,7 +897,7 @@
 
         let map;
         let markers = [];
-        let infoWindows = [];
+        let sharedInfoWindow;
         let activeMarkerIndex = null;
 
         // Calculate distance between two points using Haversine formula
@@ -925,9 +925,23 @@
             const bounds = new google.maps.LatLngBounds();
             markers.forEach(marker => bounds.extend(marker.getPosition()));
             map.fitBounds(bounds);
-            infoWindows.forEach(iw => iw.close());
+            sharedInfoWindow.close();
             document.querySelectorAll('.place-card').forEach(card => card.classList.remove('active'));
             activeMarkerIndex = null;
+        }
+
+        function getInfoWindowContent(place) {
+            return `
+                <div class="info-window">
+                    <h3>${place.name}</h3>
+                    <p>${place.description}</p>
+                    <div class="card-actions">
+                        <button class="street-view-btn" onclick="openStreetView(${place.lat}, ${place.lng})">
+                            🏙️ Street View
+                        </button>
+                    </div>
+                </div>
+            `;
         }
 
         // Initialize the map
@@ -1017,6 +1031,10 @@
                 }
             });
 
+            // Shared InfoWindow
+            // Optimization: Use a shared InfoWindow instance to reduce memory usage (Flyweight pattern)
+            sharedInfoWindow = new google.maps.InfoWindow();
+
             // Map Type Toggle Logic
             const mapTypeToggle = document.getElementById('mapTypeToggle');
             mapTypeToggle.addEventListener('click', () => {
@@ -1095,24 +1113,10 @@
                     animation: google.maps.Animation.DROP
                 });
 
-                const infoWindow = new google.maps.InfoWindow({
-                    content: `
-                        <div class="info-window">
-                            <h3>${place.name}</h3>
-                            <p>${place.description}</p>
-                            <div class="card-actions">
-                                <button class="street-view-btn" onclick="openStreetView(${place.lat}, ${place.lng})">
-                                    🏙️ Street View
-                                </button>
-                            </div>
-                        </div>
-                    `
-                });
-
                 marker.addListener('click', () => {
-                    // Close all other info windows
-                    infoWindows.forEach(iw => iw.close());
-                    infoWindow.open(map, marker);
+                    sharedInfoWindow.close();
+                    sharedInfoWindow.setContent(getInfoWindowContent(place));
+                    sharedInfoWindow.open(map, marker);
 
                     // Update active card
                     setActiveCard(index);
@@ -1122,7 +1126,6 @@
                 });
 
                 markers.push(marker);
-                infoWindows.push(infoWindow);
             });
 
             // Render place cards
@@ -1175,8 +1178,9 @@
             viewToggle.innerHTML = '<span>🖼️ Προβολή Συλλογής</span>';
 
             // Focus on marker
-            infoWindows.forEach(iw => iw.close());
-            infoWindows[index].open(map, markers[index]);
+            sharedInfoWindow.close();
+            sharedInfoWindow.setContent(getInfoWindowContent(places[index]));
+            sharedInfoWindow.open(map, markers[index]);
             map.panTo(markers[index].getPosition());
             map.setZoom(16);
 
@@ -1225,11 +1229,10 @@
                 `;
 
                 card.addEventListener('click', () => {
-                    // Close all info windows
-                    infoWindows.forEach(iw => iw.close());
-
-                    // Open the corresponding info window
-                    infoWindows[index].open(map, markers[index]);
+                    // Close current info window
+                    sharedInfoWindow.close();
+                    sharedInfoWindow.setContent(getInfoWindowContent(place));
+                    sharedInfoWindow.open(map, markers[index]);
 
                     // Center and zoom on marker
                     map.panTo(markers[index].getPosition());
