@@ -1290,11 +1290,33 @@
         }
     </script>
 
-    <!-- Google Maps API -->
-    <script async defer
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDp2IT1eDBenf32sx9wK9itoLgN6JjEHBw&callback=initMap"
-        onerror="handleMapError()">
-        </script>
+    <!-- Configuration -->
+    <script src="config.js"></script>
+
+    <!-- Google Maps API Loader -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Check if configuration exists
+            if (!window.CONFIG || !window.CONFIG.GOOGLE_MAPS_API_KEY || window.CONFIG.GOOGLE_MAPS_API_KEY === 'YOUR_API_KEY_HERE') {
+                document.getElementById('loadingOverlay').innerHTML = `
+                    <div style="text-align: center; padding: 20px;">
+                        <h2 style="color: #ea4335; margin-bottom: 16px;">⚠️ Missing Configuration</h2>
+                        <p style="color: rgba(255,255,255,0.7); margin-bottom: 8px;">Please create a <code>config.js</code> file with your Google Maps API key.</p>
+                        <p style="color: rgba(255,255,255,0.5); font-size: 0.8em;">(See config.example.js)</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Dynamically inject Google Maps script
+            const script = document.createElement('script');
+            script.src = `https://maps.googleapis.com/maps/api/js?key=${window.CONFIG.GOOGLE_MAPS_API_KEY}&callback=initMap`;
+            script.async = true;
+            script.defer = true;
+            script.onerror = handleMapError;
+            document.head.appendChild(script);
+        });
+    </script>
 </body>
 
 </html>
