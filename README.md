@@ -33,6 +33,21 @@ This project is a web-based interactive map designed to help visitors explore th
 
 ## 🚀 Getting Started
 
+### 🔑 Configuration (Required)
+
+Before running the application, you must set up your Google Maps API key.
+
+1. Copy the example configuration file:
+   ```bash
+   cp config.example.js config.js
+   ```
+2. Open `config.js` and replace `'YOUR_API_KEY_HERE'` with your valid Google Maps API key.
+   ```javascript
+   window.CONFIG = {
+       GOOGLE_MAPS_API_KEY: 'your-actual-api-key'
+   };
+   ```
+
 ### Local Development
 
 #### Using Python (Quick Start)

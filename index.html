@@ -1290,11 +1290,31 @@
         }
     </script>
 
-    <!-- Google Maps API -->
-    <script async defer
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDp2IT1eDBenf32sx9wK9itoLgN6JjEHBw&callback=initMap"
-        onerror="handleMapError()">
-        </script>
+    <!-- Google Maps API Configuration -->
+    <script src="config.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const apiKey = window.CONFIG?.GOOGLE_MAPS_API_KEY;
+
+            if (!apiKey || apiKey === 'YOUR_API_KEY_HERE') {
+                document.getElementById('loadingOverlay').innerHTML = `
+                    <div style="text-align: center; padding: 20px; color: white;">
+                        <h2 style="color: #ea4335; margin-bottom: 16px;">⚠️ Missing Configuration</h2>
+                        <p>Please create a <code>config.js</code> file with your Google Maps API key.</p>
+                        <p>See <code>config.example.js</code> for reference.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const script = document.createElement('script');
+            script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&callback=initMap`;
+            script.async = true;
+            script.defer = true;
+            script.onerror = handleMapError;
+            document.body.appendChild(script);
+        });
+    </script>
 </body>
 
 </html>
