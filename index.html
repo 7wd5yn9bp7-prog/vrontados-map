@@ -1290,11 +1290,32 @@
         }
     </script>
 
-    <!-- Google Maps API -->
-    <script async defer
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDp2IT1eDBenf32sx9wK9itoLgN6JjEHBw&callback=initMap"
-        onerror="handleMapError()">
-        </script>
+    <!-- Configuration -->
+    <script src="config.js"></script>
+
+    <!-- Google Maps API Loader -->
+    <script>
+        (function loadGoogleMaps() {
+            const config = window.CONFIG;
+            if (!config || !config.GOOGLE_MAPS_API_KEY || config.GOOGLE_MAPS_API_KEY === 'YOUR_API_KEY_HERE') {
+                console.error("Google Maps API Key is missing or invalid in config.js");
+                // Check if handleMapError is defined (it should be from the previous script block)
+                if (typeof handleMapError === 'function') {
+                    handleMapError();
+                }
+                return;
+            }
+
+            const script = document.createElement('script');
+            script.src = `https://maps.googleapis.com/maps/api/js?key=${config.GOOGLE_MAPS_API_KEY}&callback=initMap`;
+            script.async = true;
+            script.defer = true;
+            if (typeof handleMapError === 'function') {
+                script.onerror = handleMapError;
+            }
+            document.head.appendChild(script);
+        })();
+    </script>
 </body>
 
 </html>
