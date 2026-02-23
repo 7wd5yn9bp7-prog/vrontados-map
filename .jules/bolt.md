@@ -11,3 +11,7 @@ Only add entries for:
 Format: `## YYYY-MM-DD - [Title]
 **Learning:** [Insight]
 **Action:** [How to apply next time]`
+
+## 2025-02-21 - Google Maps InfoWindow Optimization
+**Learning:** Creating a new `google.maps.InfoWindow` instance for every marker is a memory anti-pattern. While impact is negligible for 7 markers, this scales linearly O(N) with dataset size.
+**Action:** Use the Flyweight pattern: instantiate a single `sharedInfoWindow` and update its content/position dynamically on marker clicks.
