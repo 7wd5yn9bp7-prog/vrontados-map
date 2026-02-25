@@ -774,10 +774,41 @@
                 transform: rotate(360deg);
             }
         }
+
+        /* Skip Link & Focus Styles */
+        .skip-link {
+            position: absolute;
+            top: -100px;
+            left: 0;
+            background: var(--primary);
+            color: white;
+            padding: 12px 20px;
+            z-index: 9999;
+            transition: top 0.3s ease-out;
+            text-decoration: none;
+            font-weight: 600;
+            border-radius: 0 0 8px 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        .skip-link:focus {
+            top: 0;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.4);
+        }
+
+        /* Global Focus Styles */
+        button:focus-visible,
+        a:focus-visible {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.4);
+        }
     </style>
 </head>
 
 <body>
+    <a href="#mapContainer" class="skip-link">Μετάβαση στον χάρτη</a>
     <div class="loading-overlay" id="loadingOverlay">
         <div class="loading-spinner" id="loadingSpinner"></div>
         <div class="loading-text" id="loadingText">Φόρτωση χάρτη...</div>
@@ -795,7 +826,7 @@
             </div>
         </aside>
 
-        <main class="map-container" id="mapContainer">
+        <main class="map-container" id="mapContainer" tabindex="-1">
             <div id="map"></div>
 
             <div id="galleryView" class="gallery-view hidden">
