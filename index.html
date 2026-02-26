@@ -838,6 +838,7 @@
         </div>
     </div>
 
+    <script src="config.js"></script>
     <script>
         // Places data with coordinates (verified via web search)
         const places = [
@@ -1291,10 +1292,30 @@
     </script>
 
     <!-- Google Maps API -->
-    <script async defer
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDp2IT1eDBenf32sx9wK9itoLgN6JjEHBw&callback=initMap"
-        onerror="handleMapError()">
-        </script>
+    <script>
+        (function() {
+            var script = document.createElement('script');
+            var apiKey = (window.CONFIG && window.CONFIG.GOOGLE_MAPS_API_KEY) || 'YOUR_API_KEY_HERE';
+
+            if (apiKey === 'YOUR_API_KEY_HERE') {
+                console.error('Google Maps API Key is missing. Please check config.js');
+                if (typeof handleMapError === 'function') {
+                    handleMapError();
+                }
+                return;
+            }
+
+            script.src = 'https://maps.googleapis.com/maps/api/js?key=' + apiKey + '&callback=initMap';
+            script.async = true;
+            script.defer = true;
+            script.onerror = function() {
+                if (typeof handleMapError === 'function') {
+                    handleMapError();
+                }
+            };
+            document.head.appendChild(script);
+        })();
+    </script>
 </body>
 
 </html>
