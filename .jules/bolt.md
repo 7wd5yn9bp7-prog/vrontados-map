@@ -11,3 +11,7 @@ Only add entries for:
 Format: `## YYYY-MM-DD - [Title]
 **Learning:** [Insight]
 **Action:** [How to apply next time]`
+
+## 2024-05-23 - Playwright Verification of Non-Visible Elements
+**Learning:** `page.wait_for_selector()` waits for visibility by default. When verifying `<link>` or `<script>` tags, this causes timeouts.
+**Action:** Always use `state='attached'` when waiting for non-visible DOM elements.
