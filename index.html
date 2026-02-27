@@ -774,10 +774,33 @@
                 transform: rotate(360deg);
             }
         }
+
+        /* Skip to Map Link (Accessibility) */
+        .skip-link {
+            position: absolute;
+            top: -100px;
+            left: 24px;
+            background: #1a73e8;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            z-index: 2001;
+            font-weight: 600;
+            text-decoration: none;
+            transition: top 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .skip-link:focus {
+            top: 24px;
+            outline: 3px solid white;
+        }
     </style>
 </head>
 
 <body>
+    <a href="#mapContainer" class="skip-link">Μετάβαση στον Χάρτη</a>
+
     <div class="loading-overlay" id="loadingOverlay">
         <div class="loading-spinner" id="loadingSpinner"></div>
         <div class="loading-text" id="loadingText">Φόρτωση χάρτη...</div>
@@ -795,7 +818,7 @@
             </div>
         </aside>
 
-        <main class="map-container" id="mapContainer">
+        <main class="map-container" id="mapContainer" tabindex="-1">
             <div id="map"></div>
 
             <div id="galleryView" class="gallery-view hidden">
