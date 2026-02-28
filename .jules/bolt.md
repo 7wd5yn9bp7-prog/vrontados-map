@@ -11,3 +11,7 @@ Only add entries for:
 Format: `## YYYY-MM-DD - [Title]
 **Learning:** [Insight]
 **Action:** [How to apply next time]`
+
+## 2026-02-28 - Optimize DOM insertions with DocumentFragment
+**Learning:** Appending multiple elements sequentially to the DOM (like `placesList` and `galleryGrid`) causes multiple layout reflows and repaints, which can degrade performance, especially on mobile devices or with large datasets.
+**Action:** Use `DocumentFragment` to batch DOM insertions. Append all new elements to the in-memory fragment first, then append the entire fragment to the DOM in a single operation to minimize reflows.
