@@ -1082,6 +1082,8 @@
 
             // Create markers for each place
             places.forEach((place, index) => {
+                const safeName = place.name.replace(/"/g, '&quot;');
+
                 const marker = new google.maps.Marker({
                     position: { lat: place.lat, lng: place.lng },
                     map: map,
@@ -1101,7 +1103,7 @@
                             <h3>${place.name}</h3>
                             <p>${place.description}</p>
                             <div class="card-actions">
-                                <button class="street-view-btn" onclick="openStreetView(${place.lat}, ${place.lng})">
+                                <button class="street-view-btn" aria-label="Street View για ${safeName}" onclick="openStreetView(${place.lat}, ${place.lng})">
                                     🏙️ Street View
                                 </button>
                             </div>
@@ -1143,6 +1145,7 @@
             if (container.children.length > 0) return; // Already rendered
 
             places.forEach((place, index) => {
+                const safeName = place.name.replace(/"/g, '&quot;');
                 const card = document.createElement('div');
                 card.className = 'gallery-card';
                 card.style.animationDelay = `${index * 0.07}s`;
@@ -1154,10 +1157,10 @@
                     <p>${place.description}</p>
                     <div class="place-distance">📍 ~${formatDistance(dist)} από το κέντρο</div>
                     <div class="card-actions">
-                        <button class="map-view-btn" onclick="showOnMap(${index})">
+                        <button class="map-view-btn" aria-label="Δείτε το ${safeName} στον Χάρτη" onclick="showOnMap(${index})">
                             📍 Δείτε στον Χάρτη
                         </button>
-                        <button class="street-view-btn" onclick="openStreetView(${place.lat}, ${place.lng})">
+                        <button class="street-view-btn" aria-label="Street View για ${safeName}" onclick="openStreetView(${place.lat}, ${place.lng})">
                             🏙️ Street View
                         </button>
                     </div>
@@ -1192,6 +1195,7 @@
             const container = document.getElementById('placesList');
 
             places.forEach((place, index) => {
+                const safeName = place.name.replace(/"/g, '&quot;');
                 const card = document.createElement('div');
                 card.className = 'place-card';
                 card.id = `place-${index}`;
@@ -1218,7 +1222,7 @@
                     <p>${place.description}</p>
                     <div class="place-distance">📍 ~${formatDistance(dist)} από το κέντρο</div>
                     <div class="card-actions">
-                        <button class="street-view-btn" onclick="event.stopPropagation(); openStreetView(${place.lat}, ${place.lng})">
+                        <button class="street-view-btn" aria-label="Street View για ${safeName}" onclick="event.stopPropagation(); openStreetView(${place.lat}, ${place.lng})">
                             🏙️ Street View
                         </button>
                     </div>
