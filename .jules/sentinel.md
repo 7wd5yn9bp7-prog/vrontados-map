@@ -1,0 +1,4 @@
+## 2024-05-24 - Externalize Hardcoded API Keys
+**Vulnerability:** A hardcoded Google Maps API key was found in `index.html` within the script `src` tag.
+**Learning:** Hardcoding API keys in frontend files directly exposes them to source control, which poses a risk of unauthorized usage, especially for billed APIs like Google Maps.
+**Prevention:** Externalize configurations to a dynamically loaded script (`config.js`) that is added to `.gitignore`. Implement a `config.example.js` for development template and use a dynamic loader for script injection. When deploying via Docker, use an entrypoint script to generate the configuration file from secure environment variables at runtime.
