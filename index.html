@@ -246,6 +246,10 @@
             position: relative;
         }
 
+        .map-container:focus-visible {
+            outline: none;
+        }
+
         #map {
             width: 100%;
             height: 100%;
@@ -712,6 +716,29 @@
             }
         }
 
+        /* Skip Link */
+        .skip-link {
+            position: absolute;
+            top: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--primary);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 0 0 12px 12px;
+            font-weight: 600;
+            z-index: 2001;
+            transition: top 0.3s ease;
+            text-decoration: none;
+            box-shadow: var(--shadow);
+        }
+
+        .skip-link:focus, .skip-link:focus-visible {
+            top: 0;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.4), var(--shadow);
+        }
+
         /* Loading Animation */
         .loading-overlay {
             position: fixed;
@@ -778,6 +805,8 @@
 </head>
 
 <body>
+    <a href="#mapContainer" class="skip-link">Μετάβαση στον Χάρτη</a>
+
     <div class="loading-overlay" id="loadingOverlay">
         <div class="loading-spinner" id="loadingSpinner"></div>
         <div class="loading-text" id="loadingText">Φόρτωση χάρτη...</div>
@@ -795,7 +824,7 @@
             </div>
         </aside>
 
-        <main class="map-container" id="mapContainer">
+        <main class="map-container" id="mapContainer" tabindex="-1">
             <div id="map"></div>
 
             <div id="galleryView" class="gallery-view hidden">
