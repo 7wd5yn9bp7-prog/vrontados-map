@@ -1,0 +1,6 @@
+# SENTINEL'S JOURNAL - CRITICAL LEARNINGS ONLY
+
+## 2025-03-01 - Prevent Exposing Frontend API Keys in Static Code
+**Vulnerability:** A hardcoded Google Maps API key was exposed in `index.html` within a static script tag (`<script src="...key=AIza...">`).
+**Learning:** For static frontend applications distributed via Docker, injecting secrets at build time (e.g., via Docker build args) or directly in source control compromises the secret. The application was built as a static HTML file served by Nginx, making standard backend environment variables inaccessible to the client.
+**Prevention:** Implemented a secure dynamic loading pattern. The frontend now loads a `config.js` file (which is git-ignored) to access the API key from a `window.CONFIG` object and dynamically injects the Google Maps script tag. In the Docker container, a `docker-entrypoint.sh` script executes at runtime to generate `config.js` by injecting the value of the `GOOGLE_MAPS_API_KEY` environment variable. A `config.example.js` with placeholder keys is committed to source control to guide local development.
