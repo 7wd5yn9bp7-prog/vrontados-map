@@ -11,3 +11,6 @@ Only add entries for:
 Format: `## YYYY-MM-DD - [Title]
 **Learning:** [Insight]
 **Action:** [How to apply next time]`
+## 2026-03-01 - DocumentFragment Optimization
+**Learning:** Using `DocumentFragment` inside loops for rendering multiple DOM elements (like `renderGalleryCards` and `renderPlaceCards`) significantly reduces layout thrashing, repaints, and reflows. Batching DOM insertions minimizes the O(N) append operations to an O(1) single append operation into the parent container.
+**Action:** When dynamically generating multiple child elements, initialize a `DocumentFragment`, append each child to the fragment within the loop, and append the complete fragment to the target DOM node outside the loop.

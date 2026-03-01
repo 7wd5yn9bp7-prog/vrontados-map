@@ -1142,6 +1142,9 @@
             const container = document.getElementById('galleryGrid');
             if (container.children.length > 0) return; // Already rendered
 
+            // Performance: Use DocumentFragment to batch DOM insertions
+            const fragment = document.createDocumentFragment();
+
             places.forEach((place, index) => {
                 const card = document.createElement('div');
                 card.className = 'gallery-card';
@@ -1162,8 +1165,10 @@
                         </button>
                     </div>
                 `;
-                container.appendChild(card);
+                fragment.appendChild(card);
             });
+
+            container.appendChild(fragment);
         }
 
         function showOnMap(index) {
@@ -1190,6 +1195,9 @@
 
         function renderPlaceCards() {
             const container = document.getElementById('placesList');
+
+            // Performance: Use DocumentFragment to batch DOM insertions
+            const fragment = document.createDocumentFragment();
 
             places.forEach((place, index) => {
                 const card = document.createElement('div');
@@ -1253,8 +1261,10 @@
                     }
                 });
 
-                container.appendChild(card);
+                fragment.appendChild(card);
             });
+
+            container.appendChild(fragment);
         }
 
         function openStreetView(lat, lng) {
